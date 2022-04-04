@@ -62,6 +62,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void StartMinigame()
     {
+        playerVelocity = Vector3.zero;
         InputManager.ToggleActionMap(inputDataRef.Minigame);
     }
 }
