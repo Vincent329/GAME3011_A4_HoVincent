@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 [System.Serializable]
 public enum PipeOpenings
@@ -12,8 +13,11 @@ public enum PipeOpenings
     RIGHT
 }
 
-public class Pipe : MonoBehaviour
+public class Pipe : MonoBehaviour, IPointerClickHandler
 {
+    [SerializeField] private int posX;
+    [SerializeField] private int posY;
+    
     [SerializeField] private PipeOpenings[] openingPoints;
     [SerializeField] private PipeEnum pipeType;
 
@@ -21,7 +25,14 @@ public class Pipe : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        fillImage = transform.GetChild(0).GetComponent<Image>();
+    }
+
+    public void InitPipe(int x, int y, PipeEnum type)
+    {
+        posX = x;
+        posY = y;
+        pipeType = type;
     }
 
     // Update is called once per frame
@@ -39,5 +50,10 @@ public class Pipe : MonoBehaviour
     private void AssignPossibleEntryPoints()
     {
 
+    }
+
+    public void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData)
+    {
+        Debug.Log("Pipe: " + posX + ", " + posY);
     }
 }

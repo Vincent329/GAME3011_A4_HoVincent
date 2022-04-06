@@ -57,6 +57,7 @@ public class GridManager : MonoBehaviour
 
         pipeArray[x, y] = pipeToSpawn.GetComponent<Pipe>();
         pipeArray[x, y].transform.SetParent(this.transform);
+        pipeArray[x, y].InitPipe(x, y, PipeEnum.PIPE);
         Debug.Log(pipeArray[x, y]);
         return pipeArray[x, y];
     }
