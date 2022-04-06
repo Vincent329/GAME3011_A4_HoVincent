@@ -14,9 +14,10 @@ public enum PipeOpenings
 
 public class Pipe : MonoBehaviour
 {
-    [SerializeField] private PipeOpenings startPoint;
-    [SerializeField] private PipeOpenings endPoint;
+    [SerializeField] private PipeOpenings[] openingPoints;
+    [SerializeField] private PipeEnum pipeType;
 
+    [SerializeField] private Image fillImage;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,7 +32,8 @@ public class Pipe : MonoBehaviour
 
     private void CheckOpenings()
     {
-
+        // CHECK OPENING LOGIC HERE
+        // depening on its start and end logic, it will dictate the logic in how the pipe is filled
     }
 
     private void AssignPossibleEntryPoints()
