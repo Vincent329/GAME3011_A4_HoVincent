@@ -66,12 +66,88 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
     /// <param name="_entryPoint"></param>
     private void CheckOpenings(PipeOpenings _entryPoint)
     {
+        switch(_entryPoint)
+        {
+            case PipeOpenings.UP:
+                entryPoint = PipeOpenings.DOWN;
+                break;
+                
+            case PipeOpenings.LEFT:
+                entryPoint = PipeOpenings.RIGHT;
+                break;
+                
+            case PipeOpenings.RIGHT:
+                entryPoint = PipeOpenings.LEFT;
+                break;
+                
+            case PipeOpenings.DOWN:
+                entryPoint = PipeOpenings.UP;
+                break;
+        }
+        AssignFillMethod();
+    }
+
+    private void AssignFillMethod()
+    {
         // CHECK OPENING LOGIC HERE
         // depening on its start and end logic, it will dictate the logic in how the pipe is filled
 
-        switch(_entryPoint)
+        if (fillImage.fillMethod == Image.FillMethod.Horizontal || fillImage.fillMethod == Image.FillMethod.Vertical)
         {
-
+            if (entryPoint == PipeOpenings.UP || entryPoint == PipeOpenings.RIGHT)
+            {
+                fillImage.fillOrigin = 1;
+            }
+            else
+            {
+                fillImage.fillOrigin = 0;
+            }
+        }
+        else if (fillImage.fillMethod == Image.FillMethod.Radial90)
+        {
+            switch (fillImage.fillOrigin)
+            {
+                case 0: // BOTTOM LEFT
+                    if (entryPoint == PipeOpenings.DOWN)
+                    {
+                        fillImage.fillClockwise = false;
+                    }
+                    else
+                    {
+                        fillImage.fillClockwise = true;
+                    }
+                    break;
+                case 1: // TOP LEFT
+                    if (entryPoint == PipeOpenings.LEFT)
+                    {
+                        fillImage.fillClockwise = false;
+                    }
+                    else
+                    {
+                        fillImage.fillClockwise = true;
+                    }
+                    break;
+                case 2: // TOP RIGHT
+                    if (entryPoint == PipeOpenings.UP)
+                    {
+                        fillImage.fillClockwise = false;
+                    }
+                    else
+                    {
+                        fillImage.fillClockwise = true;
+                    }
+                    break;
+                case 3: // BOTTOM RIGHT
+                    if (entryPoint == PipeOpenings.RIGHT)
+                    {
+                        fillImage.fillClockwise = false;
+                    }
+                    else
+                    {
+                        fillImage.fillClockwise = true;
+                    }
+                    break;
+            }
         }
     }
 

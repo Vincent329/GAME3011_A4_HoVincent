@@ -53,6 +53,7 @@ public class GridManager : MonoBehaviour
 
             stockedPipe = stockedPiece.GetComponent<Pipe>();
             stockedPipe.transform.SetParent(this.transform);
+            stockedPipe.InitPipe(-1, -1, this, PipeEnum.PIPE);
             //stockedPiece.transform.SetParent(this.transform);
 
         }
@@ -80,6 +81,7 @@ public class GridManager : MonoBehaviour
 
         stockedPipe.transform.position = pipeArray[x, y].transform.position;
         stockedPipe = pipeArray[x, y];
+        stockedPipe.SetNewPipePosition(-1, -1);
         //stockedPipe.transform.position = tempPipe.transform.position;
         pipeArray[x, y].transform.position = stockedPipeTransform.position;
         pipeArray[x, y] = tempPipe;
