@@ -18,9 +18,9 @@ public class GridManager : MonoBehaviour
 
     // Pipe Array and stocked piece
     // when you click on the pipe array, it will take the pipe from that position and swap it with the stocked piece
-    [SerializeField]
     private Pipe[,] pipeArray;
-    private Pipe stockedPiece;
+    [SerializeField] private Pipe stockedPipe;
+    [SerializeField] private Transform stockedPipeTransform;
 
     private void InitializeGameBoard()
     {
@@ -46,6 +46,16 @@ public class GridManager : MonoBehaviour
             }
         }
 
+        int stockRandomSelection = (int)Random.Range(0, pipePrefabs.Count);
+        if (stockedPipeTransform != null)
+        {
+            GameObject stockedPiece = Instantiate(pipePrefabs[stockRandomSelection], stockedPipeTransform.position, Quaternion.identity);
+
+            stockedPipe = stockedPiece.GetComponent<Pipe>();
+            stockedPipe.transform.SetParent(this.transform);
+            //stockedPiece.transform.SetParent(this.transform);
+
+        }
     }
 
     public Pipe SpawnPipe(int x, int y)
@@ -54,12 +64,35 @@ public class GridManager : MonoBehaviour
         int randomSelection = (int)Random.Range(0, pipePrefabs.Count);
 
         GameObject pipeToSpawn = Instantiate(pipePrefabs[randomSelection], GetGridPosition(x, y), Quaternion.identity);
-
+        
         pipeArray[x, y] = pipeToSpawn.GetComponent<Pipe>();
         pipeArray[x, y].transform.SetParent(this.transform);
-        pipeArray[x, y].InitPipe(x, y, PipeEnum.PIPE);
-        Debug.Log(pipeArray[x, y]);
+        pipeArray[x, y].InitPipe(x, y, this, PipeEnum.PIPE);
         return pipeArray[x, y];
+    }
+
+    // taking into account of a pipe's x and y position, this is called from the pipe script
+    public void SwapPipe(int x, int y)
+    {
+        // pipe to swap <->
+        bool hasSwiped = false;
+
+        Pipe tempPipe = stockedPipe;
+        //pipeArray[x, y].transform.position = stockedPipe.transform.position;
+        stockedPipe.transform.position = pipeArray[x, y].transform.position;
+        stockedPipe = pipeArray[x, y];
+        //stockedPipe.transform.position = tempPipe.transform.position;
+        pipeArray[x, y].transform.position = stockedPipeTransform.position;
+        pipeArray[x, y] = tempPipe;
+        //tempPipe = null;
+
+        Debug.Log(pipeArray[x, y] + ": Pos (" + x + ", " + y);
+        //if (stockedPipe != null)
+        //{
+        //    hasSwiped = true;
+        //}
+
+        //return hasSwiped;
     }
 
     // Start is called before the first frame update

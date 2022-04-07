@@ -71,8 +71,8 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 2
-  m_FillAmount: 1
-  m_FillClockwise: 0
+  m_FillAmount: 0
+  m_FillClockwise: 1
   m_FillOrigin: 2
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
@@ -166,5 +166,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd5332d757ebb944e8fc6c8c3dd94efb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  posX: 0
+  posY: 0
   openingPoints: 0300000000000000
   pipeType: 1
+  fillImage: {fileID: 0}
+  entryPoint: 0

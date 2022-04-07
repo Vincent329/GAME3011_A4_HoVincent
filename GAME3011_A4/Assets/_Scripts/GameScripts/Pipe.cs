@@ -18,20 +18,24 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
     [SerializeField] private int posX;
     [SerializeField] private int posY;
     
-    [SerializeField] private PipeOpenings[] openingPoints;
+    [SerializeField] private PipeOpenings[] openingPoints; // should only be two opening points
     [SerializeField] private PipeEnum pipeType;
 
     [SerializeField] private Image fillImage;
+
+    [SerializeField] private PipeOpenings entryPoint;
+    [SerializeField] private GridManager gridRef;
     // Start is called before the first frame update
     void Start()
     {
         fillImage = transform.GetChild(0).GetComponent<Image>();
     }
 
-    public void InitPipe(int x, int y, PipeEnum type)
+    public void InitPipe(int x, int y, GridManager gridReference, PipeEnum type)
     {
         posX = x;
         posY = y;
+        gridRef = gridReference;
         pipeType = type;
     }
 
@@ -41,10 +45,20 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
         
     }
 
-    private void CheckOpenings()
+    /// <summary>
+    /// Depending on the entry point, you'd call this function if it's the pipe to be entered
+    /// This will not be called if we find a break in the structure
+    /// </summary>
+    /// <param name="_entryPoint"></param>
+    private void CheckOpenings(PipeOpenings _entryPoint)
     {
         // CHECK OPENING LOGIC HERE
         // depening on its start and end logic, it will dictate the logic in how the pipe is filled
+
+        switch(_entryPoint)
+        {
+
+        }
     }
 
     private void AssignPossibleEntryPoints()
@@ -54,6 +68,6 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData)
     {
-        Debug.Log("Pipe: " + posX + ", " + posY);
+        gridRef.SwapPipe(posX, posY);
     }
 }
