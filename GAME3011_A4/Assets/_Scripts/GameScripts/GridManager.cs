@@ -74,17 +74,19 @@ public class GridManager : MonoBehaviour
     // taking into account of a pipe's x and y position, this is called from the pipe script
     public void SwapPipe(int x, int y)
     {
-        // pipe to swap <->
-        bool hasSwiped = false;
-
+        // temp reference to the stock pipe
         Pipe tempPipe = stockedPipe;
         //pipeArray[x, y].transform.position = stockedPipe.transform.position;
+
         stockedPipe.transform.position = pipeArray[x, y].transform.position;
         stockedPipe = pipeArray[x, y];
         //stockedPipe.transform.position = tempPipe.transform.position;
         pipeArray[x, y].transform.position = stockedPipeTransform.position;
         pipeArray[x, y] = tempPipe;
+        pipeArray[x, y].SetNewPipePosition(x, y);
+
         //tempPipe = null;
+     
 
         Debug.Log(pipeArray[x, y] + ": Pos (" + x + ", " + y);
         //if (stockedPipe != null)
@@ -93,6 +95,17 @@ public class GridManager : MonoBehaviour
         //}
 
         //return hasSwiped;
+    }
+
+    void ClearPipes()
+    {
+        for (int x = 0; x < gridX; x++)
+        {
+            for (int y = 0; y < gridY; y++)
+            {
+                Destroy(pipeArray[x, y].gameObject);
+            }
+        }
     }
 
     // Start is called before the first frame update

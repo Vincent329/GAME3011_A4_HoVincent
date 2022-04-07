@@ -20,6 +20,14 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
     
     [SerializeField] private PipeOpenings[] openingPoints; // should only be two opening points
     [SerializeField] private PipeEnum pipeType;
+    public PipeEnum PipeType
+    {
+        get => pipeType;
+        set
+        {
+            pipeType = value;
+        }
+    }
 
     [SerializeField] private Image fillImage;
 
@@ -37,6 +45,12 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
         posY = y;
         gridRef = gridReference;
         pipeType = type;
+    }
+
+    public void SetNewPipePosition(int x, int y)
+    {
+        posX = x;
+        posY = y;
     }
 
     // Update is called once per frame
@@ -68,6 +82,9 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData)
     {
-        gridRef.SwapPipe(posX, posY);
+        if (pipeType == PipeEnum.PIPE)
+        {
+            gridRef.SwapPipe(posX, posY);
+        }
     }
 }
