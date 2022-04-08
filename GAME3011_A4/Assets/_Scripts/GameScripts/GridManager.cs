@@ -30,21 +30,19 @@ public class GridManager : MonoBehaviour
     [SerializeField] private StartPipe startingPipe;
     [SerializeField] private Pipe fillInProgressPipe;
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
         fillInProgressPipe = null;
         InitializeGameBoard();
-
-    }
-
-    private void OnEnable()
-    {
-
     }
 
     private void OnDisable()
     {
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
     }
 
     // Update is called once per frame
@@ -187,6 +185,7 @@ public class GridManager : MonoBehaviour
                             Debug.Log("Entry");
 
                             pipeArray[xPos, yPos + 1].CheckOpenings(pipeArray[xPos, yPos].ExitPoint);
+                            fillInProgressPipe = pipeArray[xPos, yPos + 1];
                             exitFound = true;
                             break;
                         }
@@ -211,6 +210,7 @@ public class GridManager : MonoBehaviour
                             Debug.Log("Entry");
 
                             pipeArray[xPos, yPos - 1].CheckOpenings(pipeArray[xPos, yPos].ExitPoint);
+                            fillInProgressPipe = pipeArray[xPos, yPos - 1];
                             exitFound = true;
                             break;
                         }
@@ -233,6 +233,8 @@ public class GridManager : MonoBehaviour
                         if (pipeOpenings == PipeOpenings.RIGHT)
                         {
                             pipeArray[xPos - 1, yPos].CheckOpenings(pipeArray[xPos, yPos].ExitPoint);
+                            fillInProgressPipe = pipeArray[xPos - 1, yPos];
+
                             exitFound = true;
                             break;
                         }
@@ -255,6 +257,7 @@ public class GridManager : MonoBehaviour
                         if (pipeOpenings == PipeOpenings.LEFT)
                         {
                             pipeArray[xPos + 1, yPos].CheckOpenings(pipeArray[xPos, yPos].ExitPoint);
+                            fillInProgressPipe = pipeArray[xPos + 1, yPos];
                             exitFound = true;
                             break;
                         }
