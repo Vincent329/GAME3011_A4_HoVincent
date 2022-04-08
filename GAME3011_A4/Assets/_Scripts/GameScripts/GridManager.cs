@@ -16,6 +16,7 @@ public class GridManager : MonoBehaviour
     // List of pieces to spawn, for every tile element, we're going to keep a list of potential prefabs, then do a random count from there
     [SerializeField] private List<GameObject> pipePrefabs;
     [SerializeField] private List<GameObject> startPipePrefabs; // create the logic to have one of these spawn on the grid
+    [SerializeField] private List<GameObject> endPipePrefabs; // create the logic to have one of these spawn on the grid
 
     // Pipe Array and stocked piece
     // when you click on the pipe array, it will take the pipe from that position and swap it with the stocked piece
@@ -29,6 +30,7 @@ public class GridManager : MonoBehaviour
     // End pipe
     [SerializeField] private StartPipe startingPipe;
     [SerializeField] private Pipe fillInProgressPipe;
+    [SerializeField] private EndPipe endPipe;
 
     private void OnEnable()
     {
@@ -43,12 +45,6 @@ public class GridManager : MonoBehaviour
         {
             Destroy(transform.GetChild(i).gameObject);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     private void InitializeGameBoard()
@@ -93,6 +89,14 @@ public class GridManager : MonoBehaviour
         startingPipe.InitPipe(0, startPosition, this, PipeEnum.START);
         startingPipe.transform.SetParent(this.transform);
         pipeArray[0, startPosition] = startingPipe;
+        
+        // initialize the end pipe
+        int endPosition = (int)Random.Range(1, gridY - 1);
+        GameObject finishPipe = Instantiate(endPipePrefabs[0], GetGridPosition(gridX - 1, endPosition), Quaternion.identity);
+        endPipe = finishPipe.GetComponent<EndPipe>();
+        endPipe.InitPipe(gridX - 1, endPosition, this, PipeEnum.FINISH);
+        endPipe.transform.SetParent(this.transform);
+        pipeArray[gridX - 1, endPosition] = endPipe;
     }
 
     public Pipe SpawnPipe(int x, int y)

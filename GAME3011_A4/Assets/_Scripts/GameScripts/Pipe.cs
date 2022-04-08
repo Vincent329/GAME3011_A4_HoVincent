@@ -30,7 +30,7 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
     // Pipe fill times
     [SerializeField] protected float fillAmount;
     [SerializeField] protected float fillProgressionRate;
-    [SerializeField] bool fillComplete;
+    [SerializeField] protected bool fillComplete;
 
     [SerializeField] protected Image fillImage;
     [SerializeField] protected PipeOpenings entryPoint;
@@ -69,7 +69,7 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
         StartCoroutine(ProgressFilling(GameManager.Instance.fillTime));
     }
 
-    protected IEnumerator ProgressFilling(float duration)
+    protected virtual IEnumerator ProgressFilling(float duration)
     {
         while (!fillComplete)
         {
@@ -114,7 +114,7 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
     }
 
     //check fill origin and fill functionality depening on the fill type
-    private void AssignFillMethod()
+    protected virtual void AssignFillMethod()
     {
         // CHECK OPENING LOGIC HERE
         // depening on its start and end logic, it will dictate the logic in how the pipe is filled

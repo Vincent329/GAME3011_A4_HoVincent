@@ -31,7 +31,6 @@ public class StartPipe : Pipe
 
     public override void CheckOpenings(PipeOpenings start)
     {
-        Debug.Log(start);
         switch (start)
         {
             case PipeOpenings.UP:
