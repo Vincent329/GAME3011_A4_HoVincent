@@ -14,13 +14,44 @@ public class GridManager : MonoBehaviour
     private float pieceDimension;
 
     // List of pieces to spawn, for every tile element, we're going to keep a list of potential prefabs, then do a random count from there
-    [SerializeField] private List<GameObject> pipePrefabs; 
+    [SerializeField] private List<GameObject> pipePrefabs;
+    [SerializeField] private List<GameObject> startPipePrefabs; // create the logic to have one of these spawn on the grid
 
     // Pipe Array and stocked piece
     // when you click on the pipe array, it will take the pipe from that position and swap it with the stocked piece
     private Pipe[,] pipeArray;
     [SerializeField] private Pipe stockedPipe;
     [SerializeField] private Transform stockedPipeTransform;
+
+    // Keep track of pipes that are of importance
+    // Start Pipe
+    // pipe currently being filled
+    // End pipe
+    [SerializeField] private StartPipe startingPipe;
+    [SerializeField] private Pipe fillInProgressPipe;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        fillInProgressPipe = null;
+        InitializeGameBoard();
+
+    }
+
+    private void OnEnable()
+    {
+
+    }
+
+    private void OnDisable()
+    {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 
     private void InitializeGameBoard()
     {
@@ -55,8 +86,15 @@ public class GridManager : MonoBehaviour
             stockedPipe.transform.SetParent(this.transform);
             stockedPipe.InitPipe(-1, -1, this, PipeEnum.PIPE);
             //stockedPiece.transform.SetParent(this.transform);
-
         }
+
+        // initialize the start pipe
+        int startPosition = (int)Random.Range(1, gridY - 1);
+        GameObject startPipe = Instantiate(startPipePrefabs[0], GetGridPosition(0, startPosition), Quaternion.identity);
+        startingPipe = startPipe.GetComponent<StartPipe>();
+        startingPipe.InitPipe(0, startPosition, this, PipeEnum.START);
+        startingPipe.transform.SetParent(this.transform);
+        pipeArray[0, startPosition] = startingPipe;
     }
 
     public Pipe SpawnPipe(int x, int y)
@@ -91,12 +129,7 @@ public class GridManager : MonoBehaviour
      
 
         Debug.Log(pipeArray[x, y] + ": Pos (" + x + ", " + y);
-        //if (stockedPipe != null)
-        //{
-        //    hasSwiped = true;
-        //}
-
-        //return hasSwiped;
+        
     }
 
     void ClearPipes()
@@ -110,26 +143,136 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    private void OnEnable()
-    {
-        InitializeGameBoard();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public Vector2 GetGridPosition(int x, int y)
     {
         Vector2 GridPos = new Vector2(transform.position.x - ((gridX / 2) * pieceDimension) + x * pieceDimension,
                                     transform.position.y - ((gridY / 2) * pieceDimension) + y * pieceDimension);
         return GridPos;
     }
+   
+    public void CheckExit(Pipe finishedPipe, int xPos, int yPos)
+    {
+        foreach(PipeOpenings openings in finishedPipe.GetPipeOpenings)
+        {
+            // between the two openings, check which one is the 
+            if (finishedPipe.PipeType == PipeEnum.START)
+            {
+                Debug.Log("START!?");
+                CheckNextPipe(xPos, yPos);
+            }
+            else if (finishedPipe.PipeType != PipeEnum.START && finishedPipe.GetEntryPoint != openings)
+            {
+                Debug.Log("BYPASS!?");
+                pipeArray[xPos, yPos].ExitPoint = openings; // assign the exit point
+                CheckNextPipe(xPos, yPos);
+            } 
+        }
+    }
+
+    // go through the grid, and check the current pipe that has just finished
+    // called from the pipe in question
+    private void CheckNextPipe(int xPos, int yPos)
+    {
+        bool exitFound = false;
+        // take the current exit point of the pipe, and check the array
+        switch(pipeArray[xPos, yPos].ExitPoint)
+        {
+            case PipeOpenings.UP:
+                if (pipeArray[xPos, yPos + 1] != null)
+                {
+                    foreach (PipeOpenings pipeOpenings in pipeArray[xPos, yPos + 1].GetPipeOpenings)
+                    {
+                        if (pipeOpenings == PipeOpenings.DOWN)
+                        {
+                            Debug.Log("Entry");
+
+                            pipeArray[xPos, yPos + 1].CheckOpenings(pipeArray[xPos, yPos].ExitPoint);
+                            exitFound = true;
+                            break;
+                        }
+                    }
+                    if (!exitFound)
+                    {
+                        Debug.Log("GameOver");
+                    }
+                } 
+                else // out of bounds case
+                {
+                    Debug.Log("GameOver");
+                }
+                break;
+            case PipeOpenings.DOWN:
+                if (pipeArray[xPos, yPos - 1] != null)
+                {
+                    foreach (PipeOpenings pipeOpenings in pipeArray[xPos, yPos - 1].GetPipeOpenings)
+                    {
+                        if (pipeOpenings == PipeOpenings.UP)
+                        {
+                            Debug.Log("Entry");
+
+                            pipeArray[xPos, yPos - 1].CheckOpenings(pipeArray[xPos, yPos].ExitPoint);
+                            exitFound = true;
+                            break;
+                        }
+                    }
+                    if (!exitFound)
+                    {
+                        Debug.Log("GameOver");
+                    }
+                }
+                else
+                {
+                    Debug.Log("GameOver");
+                }
+                break;
+            case PipeOpenings.LEFT:
+                if (pipeArray[xPos - 1, yPos] != null)
+                {
+                    foreach (PipeOpenings pipeOpenings in pipeArray[xPos - 1, yPos].GetPipeOpenings)
+                    {
+                        if (pipeOpenings == PipeOpenings.RIGHT)
+                        {
+                            pipeArray[xPos - 1, yPos].CheckOpenings(pipeArray[xPos, yPos].ExitPoint);
+                            exitFound = true;
+                            break;
+                        }
+                    }
+                    if (!exitFound)
+                    {
+                        Debug.Log("GameOver");
+                    }
+                }
+                else
+                {
+                    Debug.Log("GameOver");
+                }
+                break;
+            case PipeOpenings.RIGHT:
+                if (pipeArray[xPos + 1, yPos] != null)
+                {
+                    foreach (PipeOpenings pipeOpenings in pipeArray[xPos + 1, yPos].GetPipeOpenings)
+                    {
+                        if (pipeOpenings == PipeOpenings.LEFT)
+                        {
+                            pipeArray[xPos + 1, yPos].CheckOpenings(pipeArray[xPos, yPos].ExitPoint);
+                            exitFound = true;
+                            break;
+                        }
+                    }
+                    if (!exitFound)
+                    {
+                        Debug.Log("GameOver");
+                    }
+                }
+                else
+                {
+                    Debug.Log("GameOver");
+                }
+                break;
+            default:
+                Debug.Log("Error Case");
+                break;
+        }
+    }
+
 }

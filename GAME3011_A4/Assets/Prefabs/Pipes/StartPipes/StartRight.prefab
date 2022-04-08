@@ -92,8 +92,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   posX: 0
   posY: 0
-  openingPoints: 03000000
+  openingPoints: 02000000
   pipeType: 0
+  fillAmount: 0
+  fillProgressionRate: 0
+  fillComplete: 0
   fillImage: {fileID: 0}
   entryPoint: 0
   gridRef: {fileID: 0}

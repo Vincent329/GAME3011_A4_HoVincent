@@ -19,25 +19,30 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
     [SerializeField] private int posY;
     
     [SerializeField] private PipeOpenings[] openingPoints; // should only be two opening points
+    public PipeOpenings[] GetPipeOpenings => openingPoints;
     [SerializeField] private PipeEnum pipeType;
     public PipeEnum PipeType
     {
         get => pipeType;
-        set
-        {
-            pipeType = value;
-        }
+        set { pipeType = value; }
     }
 
-    [SerializeField] private Image fillImage;
+    // Pipe fill times
+    [SerializeField] protected float fillAmount;
+    [SerializeField] protected float fillProgressionRate;
+    [SerializeField] bool fillComplete;
 
-    [SerializeField] private PipeOpenings entryPoint;
+    [SerializeField] protected Image fillImage;
+    [SerializeField] protected PipeOpenings entryPoint;
+    public PipeOpenings GetEntryPoint => entryPoint;
+    [SerializeField] protected PipeOpenings exitPoint;
+    public PipeOpenings ExitPoint
+    { 
+        get => exitPoint;
+        set { exitPoint = value; }
+    }
     [SerializeField] private GridManager gridRef;
     // Start is called before the first frame update
-    void Start()
-    {
-        fillImage = transform.GetChild(0).GetComponent<Image>();
-    }
 
     public void InitPipe(int x, int y, GridManager gridReference, PipeEnum type)
     {
@@ -45,6 +50,10 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
         posY = y;
         gridRef = gridReference;
         pipeType = type;
+        fillComplete = false;
+
+        fillProgressionRate = GameManager.Instance.fillProgressionRate;
+        fillImage = transform.GetChild(0).GetComponent<Image>(); // first child is essentially the fill image
     }
 
     public void SetNewPipePosition(int x, int y)
@@ -53,20 +62,36 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
         posY = y;
     }
 
-    // Update is called once per frame
-    void Update()
+    public virtual void BeginFilling()
     {
-        
+        fillAmount = 0;
+        pipeType = PipeEnum.PIPE_USED;
+        StartCoroutine(ProgressFilling(GameManager.Instance.fillTime));
+    }
+
+    protected IEnumerator ProgressFilling(float duration)
+    {
+        while (!fillComplete)
+        {
+            fillAmount += fillProgressionRate / duration;
+            fillImage.fillAmount = fillAmount;
+            yield return new WaitForSeconds(fillProgressionRate);
+            if (fillAmount >= 1)
+            {
+                fillComplete = true;
+                gridRef.CheckExit(this, posX, posY);    
+            }
+        }
     }
 
     /// <summary>
-    /// Depending on the entry point, you'd call this function if it's the pipe to be entered
+    /// pass in the opening of the preceding pipe, 
     /// This will not be called if we find a break in the structure
     /// </summary>
     /// <param name="_entryPoint"></param>
-    private void CheckOpenings(PipeOpenings _entryPoint)
+    public virtual void CheckOpenings(PipeOpenings precedingEntryPoint)
     {
-        switch(_entryPoint)
+        switch(precedingEntryPoint)
         {
             case PipeOpenings.UP:
                 entryPoint = PipeOpenings.DOWN;
@@ -85,8 +110,10 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
                 break;
         }
         AssignFillMethod();
+        BeginFilling(); 
     }
 
+    //check fill origin and fill functionality depening on the fill type
     private void AssignFillMethod()
     {
         // CHECK OPENING LOGIC HERE
@@ -151,16 +178,14 @@ public class Pipe : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    private void AssignPossibleEntryPoints()
-    {
-
-    }
-
     public void OnPointerClick(UnityEngine.EventSystems.PointerEventData eventData)
     {
         if (pipeType == PipeEnum.PIPE)
         {
             gridRef.SwapPipe(posX, posY);
+        } else
+        {
+            Debug.Log("Invalid pipe to swap");
         }
     }
 }

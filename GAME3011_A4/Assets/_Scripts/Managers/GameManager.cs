@@ -2,17 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private static GameManager instance;
+    public static GameManager Instance => instance;
+
+    public float fillTime; // the duration it takes to fill
+    public float fillProgressionRate;
+    public float delayStartTime;
+
+    private void Awake()
     {
-        
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        } else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   
+
+
 }
