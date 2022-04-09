@@ -19,8 +19,6 @@ public class TriggerVolume : MonoBehaviour
         GameManager.Instance.ToggleInstructionPanel(inGame);
     }
 
-    
-
     private void OnTriggerExit(Collider other)
     {
         inGame = false;

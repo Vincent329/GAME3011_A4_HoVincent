@@ -23,8 +23,8 @@ public class GameManager : MonoBehaviour
     public delegate void DifficultySet(DifficultyEnum difficulty);
     public event DifficultySet StartWithDifficulty;
 
-    public delegate void ResetGame();
-    public event ResetGame ResetTheGame;
+    public delegate void DeactivateGame();
+    public event DeactivateGame DeactivateTheGame;
 
     public delegate void WinGame();
     public event WinGame Win;
@@ -50,6 +50,8 @@ public class GameManager : MonoBehaviour
         StartWithDifficulty += ToggleGamePanel;
         Win += ToggleWinText;
         Lose += ToggleLoseText;
+        DeactivateTheGame += TurnOffGamePanel;
+
     }
 
     private void OnDisable()
@@ -57,6 +59,7 @@ public class GameManager : MonoBehaviour
         StartWithDifficulty -= ToggleGamePanel;
         Win -= ToggleWinText;
         Lose -= ToggleLoseText;
+        DeactivateTheGame -= TurnOffGamePanel;
     }
 
     public void SwitchToMinigame()
@@ -73,6 +76,12 @@ public class GameManager : MonoBehaviour
     {
         StartWithDifficulty?.Invoke(difficulty);
     }
+
+    public void InvokeTurnOffGame()
+    {
+        DeactivateTheGame?.Invoke();
+    }
+
     public void ToggleInstructionPanel(bool inTrigger)
     {
         instructionPanel.SetActive(inTrigger);
@@ -81,6 +90,10 @@ public class GameManager : MonoBehaviour
     {
         difficultyEnum = difficultyCheck;
         gamePanel.SetActive(true);
+    }
+    private void TurnOffGamePanel()
+    {
+        gamePanel.SetActive(false);
     }
 
     private void ToggleWinText()
