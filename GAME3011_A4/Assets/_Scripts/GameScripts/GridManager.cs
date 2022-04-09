@@ -23,7 +23,7 @@ public class GridManager : MonoBehaviour
     private Pipe[,] pipeArray;
     [SerializeField] private Pipe stockedPipe;
     [SerializeField] private Transform stockedPipeTransform;
-
+    
     // Keep track of pipes that are of importance
     // Start Pipe
     // pipe currently being filled
@@ -31,6 +31,9 @@ public class GridManager : MonoBehaviour
     [SerializeField] private StartPipe startingPipe;
     [SerializeField] private Pipe fillInProgressPipe;
     [SerializeField] private EndPipe endPipe;
+
+    // Keep track of difficulty locally
+    [SerializeField] private DifficultyEnum difficultySet;
 
     private void OnEnable()
     {
@@ -49,6 +52,21 @@ public class GridManager : MonoBehaviour
 
     private void InitializeGameBoard()
     {
+        difficultySet = GameManager.Instance.difficultyEnum;
+        if (difficultySet == DifficultyEnum.EASY)
+        {
+            gridX = 6;
+            gridY = 6;
+        } else if (difficultySet == DifficultyEnum.NORMAL)
+        {
+            gridX = 10;
+            gridY = 10;
+        } else if (difficultySet == DifficultyEnum.HARD)
+        {
+            gridX = 13;
+            gridY = 13;
+        }
+
         GameObject gridTile = null;
         pieceDimension = backgroundPrefabObject.GetComponent<RectTransform>().rect.width;
 
@@ -126,11 +144,6 @@ public class GridManager : MonoBehaviour
         pipeArray[x, y].transform.position = stockedPipeTransform.position;
         pipeArray[x, y] = tempPipe;
         pipeArray[x, y].SetNewPipePosition(x, y);
-
-        //tempPipe = null;
-     
-
-        Debug.Log(pipeArray[x, y] + ": Pos (" + x + ", " + y);
         
     }
 

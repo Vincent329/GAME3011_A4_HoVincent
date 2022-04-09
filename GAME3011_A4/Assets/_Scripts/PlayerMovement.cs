@@ -44,7 +44,6 @@ public class PlayerMovement : MonoBehaviour
     {
         inputDataRef.Player.Move.performed -= OnMove;
         inputDataRef.Player.Move.canceled -= OnMove;
-
     }
 
     // Update is called once per frame
