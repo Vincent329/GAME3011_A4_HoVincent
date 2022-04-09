@@ -51,14 +51,8 @@ public class EndPipe : Pipe
             {
                 fillComplete = true;
 
-                if (GameManager.Instance.requiredPipesRemaining <= 0)
-                {
-                    GameManager.Instance.InvokeWin();
-                } else
-                {
-                    GameManager.Instance.InvokeLose();
-                }
-                // set win condition here
+                GameManager.Instance.InvokeWin();
+              
             }
         }
     }

@@ -37,7 +37,7 @@ public class GridManager : MonoBehaviour
     // Must pass through a specific node(s) in order to hack completely
     [SerializeField] private Color requiredColor;
     [SerializeField] private List<Pipe> requiredPipes;
-    [Range(1, 3), SerializeField] private int requiredPipesCount;
+    [Range(1, 3), SerializeField] private int slowPipesCount;
     
     // Keep track of difficulty locally
     [SerializeField] private DifficultyEnum difficultySet;
@@ -125,10 +125,10 @@ public class GridManager : MonoBehaviour
         pipeArray[gridX - 1, endPosition] = endPipe;
 
         // set up required nodes
-        if (requiredPipesCount > 0)
+        if (slowPipesCount > 0)
         {
             requiredPipes = new List<Pipe>();
-            for (int i = 0; i < requiredPipesCount; i++)
+            for (int i = 0; i < slowPipesCount; i++)
             {
                 int requiredX = (int)Random.Range(2, gridX - 2);
                 int requiredY = (int)Random.Range(2, gridY - 2);
@@ -136,7 +136,7 @@ public class GridManager : MonoBehaviour
                 pipeArray[requiredX, requiredY].PipeType = PipeEnum.REQUIRED_NODE;
                 pipeArray[requiredX, requiredY].GetComponent<Image>().color = requiredColor;
             }
-            GameManager.Instance.requiredPipesRemaining = requiredPipesCount;
+            GameManager.Instance.slowdownPipesRemaining = slowPipesCount;
         }
     }
 
@@ -222,7 +222,8 @@ public class GridManager : MonoBehaviour
                         {
                             if (pipeArray[xPos, yPos + 1].PipeType == PipeEnum.REQUIRED_NODE)
                             {
-                                GameManager.Instance.requiredPipesRemaining -= 1;
+                                GameManager.Instance.slowdownPipesRemaining -= 1;
+                                GameManager.Instance.fillTime += 1;
                                 GameManager.Instance.UpdateScoreText();
                             }
                             pipeArray[xPos, yPos + 1].CheckOpenings(pipeArray[xPos, yPos].ExitPoint);
@@ -250,7 +251,9 @@ public class GridManager : MonoBehaviour
                         {
                             if (pipeArray[xPos, yPos - 1].PipeType == PipeEnum.REQUIRED_NODE)
                             {
-                                GameManager.Instance.requiredPipesRemaining -= 1;
+                                GameManager.Instance.slowdownPipesRemaining -= 1;
+
+                                GameManager.Instance.fillTime += 1;
                                 GameManager.Instance.UpdateScoreText();
                             }
                             pipeArray[xPos, yPos - 1].CheckOpenings(pipeArray[xPos, yPos].ExitPoint);
@@ -278,7 +281,8 @@ public class GridManager : MonoBehaviour
                         {
                             if (pipeArray[xPos - 1, yPos].PipeType == PipeEnum.REQUIRED_NODE)
                             {
-                                GameManager.Instance.requiredPipesRemaining -= 1;
+                                GameManager.Instance.slowdownPipesRemaining -= 1;
+                                GameManager.Instance.fillTime += 1;
                                 GameManager.Instance.UpdateScoreText();
                             }
                             pipeArray[xPos - 1, yPos].CheckOpenings(pipeArray[xPos, yPos].ExitPoint);
@@ -306,7 +310,9 @@ public class GridManager : MonoBehaviour
                         {
                             if (pipeArray[xPos + 1, yPos].PipeType == PipeEnum.REQUIRED_NODE)
                             {
-                                GameManager.Instance.requiredPipesRemaining -= 1;
+                                GameManager.Instance.slowdownPipesRemaining -= 1;
+
+                                GameManager.Instance.fillTime += 1;
                                 GameManager.Instance.UpdateScoreText();
                             }
                             pipeArray[xPos + 1, yPos].CheckOpenings(pipeArray[xPos, yPos].ExitPoint);
