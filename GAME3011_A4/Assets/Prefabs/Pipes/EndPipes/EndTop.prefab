@@ -93,7 +93,7 @@ MonoBehaviour:
   posX: 0
   posY: 0
   openingPoints: 01000000
-  pipeType: 0
+  pipeType: 4
   fillAmount: 0
   fillProgressionRate: 0
   fillComplete: 0

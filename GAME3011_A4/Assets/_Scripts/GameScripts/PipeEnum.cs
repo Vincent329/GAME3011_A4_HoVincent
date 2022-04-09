@@ -8,7 +8,7 @@ public enum PipeEnum
     START,
     PIPE,
     PIPE_USED,
-    STOCKPIPE,
+    REQUIRED_NODE,
     FINISH,
     COUNT
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 [System.Serializable]
 public class GameManager : MonoBehaviour
@@ -10,16 +11,23 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance => instance;
 
+    [Header("Gameplay Values")]
+    private float originalFillTime;
     public float fillTime; // the duration it takes to fill
     public float fillProgressionRate;
     public float delayStartTime; // How long before the game initiates
     public bool gameStarted;
+    public int requiredPipesRemaining;
+
 
     public DifficultyEnum difficultyEnum;
-
+    
+    // ---------- Gameplay Panels -------------
     [SerializeField] private GameObject instructionPanel;
     [SerializeField] private GameObject gamePanel;
+    [SerializeField] private TextMeshProUGUI scoreText;
 
+    // ---------- Events and Delegates ---------------
     public delegate void DifficultySet(DifficultyEnum difficulty);
     public event DifficultySet StartWithDifficulty;
 
@@ -47,6 +55,7 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         gameStarted = false;
+        originalFillTime = fillTime;
         StartWithDifficulty += ToggleGamePanel;
         Win += ToggleWinText;
         Lose += ToggleLoseText;
@@ -62,24 +71,30 @@ public class GameManager : MonoBehaviour
         DeactivateTheGame -= TurnOffGamePanel;
     }
 
-    public void SwitchToMinigame()
-    {
-        InputManager.ToggleActionMap(InputManager.playerInputActions.Minigame);
-    }
-
-    public void ReturnToPlayer()
-    {
-        InputManager.ToggleActionMap(InputManager.playerInputActions.Player);
-    }
-
+    // functions to invoke delegates
     public void DifficultyInitiate(DifficultyEnum difficulty)
     {
         StartWithDifficulty?.Invoke(difficulty);
+        UpdateScoreText();
+    }
+    public void UpdateScoreText()
+    {
+        scoreText.text = "Remaining Pipes: " + requiredPipesRemaining;
     }
 
     public void InvokeTurnOffGame()
     {
         DeactivateTheGame?.Invoke();
+    }
+
+    public void InvokeWin()
+    {
+        Win?.Invoke();
+    }
+
+    public void InvokeLose()
+    {
+        Lose?.Invoke();
     }
 
     public void ToggleInstructionPanel(bool inTrigger)

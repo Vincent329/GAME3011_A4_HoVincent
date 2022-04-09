@@ -50,7 +50,15 @@ public class EndPipe : Pipe
             if (fillAmount >= 1)
             {
                 fillComplete = true;
-                Debug.Log("GameOver");
+
+                if (GameManager.Instance.requiredPipesRemaining <= 0)
+                {
+                    Debug.Log("Call Win Function");
+                } else
+                {
+                    Debug.Log("Call Lose Function");
+                }
+                // set win condition here
             }
         }
     }

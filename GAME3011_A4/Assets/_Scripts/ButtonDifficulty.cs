@@ -18,6 +18,6 @@ public class ButtonDifficulty : MonoBehaviour
     {
         GameManager.Instance.DifficultyInitiate(difficulty);
         GameManager.Instance.gameStarted = true;
-        GameManager.Instance.SwitchToMinigame();
+        InputManager.ToggleActionMap(InputManager.playerInputActions.Minigame);
     }
 }
