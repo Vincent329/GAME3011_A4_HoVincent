@@ -43,7 +43,8 @@ public class GridManager : MonoBehaviour
 
     private void OnDisable()
     {
-
+        GameManager.Instance.gameStarted = false;
+        GameManager.Instance.ReturnToPlayer();
         for (int i = 0; i < transform.childCount; i++)
         {
             Destroy(transform.GetChild(i).gameObject);

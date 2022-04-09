@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public float fillTime; // the duration it takes to fill
     public float fillProgressionRate;
     public float delayStartTime; // How long before the game initiates
+    public bool gameStarted;
 
     public DifficultyEnum difficultyEnum;
 
@@ -45,15 +46,25 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
+        gameStarted = false;
         StartWithDifficulty += ToggleGamePanel;
+        Win += ToggleWinText;
+        Lose += ToggleLoseText;
     }
 
     private void OnDisable()
     {
         StartWithDifficulty -= ToggleGamePanel;
+        Win -= ToggleWinText;
+        Lose -= ToggleLoseText;
     }
 
-    private void ReturnToPlayer()
+    public void SwitchToMinigame()
+    {
+        InputManager.ToggleActionMap(InputManager.playerInputActions.Minigame);
+    }
+
+    public void ReturnToPlayer()
     {
         InputManager.ToggleActionMap(InputManager.playerInputActions.Player);
     }
@@ -68,6 +79,17 @@ public class GameManager : MonoBehaviour
     }
     private void ToggleGamePanel(DifficultyEnum difficultyCheck)
     {
+        difficultyEnum = difficultyCheck;
         gamePanel.SetActive(true);
+    }
+
+    private void ToggleWinText()
+    {
+
+    }
+
+    private void ToggleLoseText()
+    {
+
     }
 }

@@ -6,11 +6,20 @@ public class TriggerVolume : MonoBehaviour
 {
     bool inGame = false;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        inGame = true;
+        if (GameManager.Instance.gameStarted)
+        {
+            inGame = false;
+        }
+        else
+        {
+            inGame = true;
+        }
         GameManager.Instance.ToggleInstructionPanel(inGame);
     }
+
+    
 
     private void OnTriggerExit(Collider other)
     {
