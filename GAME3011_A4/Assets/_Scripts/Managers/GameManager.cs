@@ -113,11 +113,11 @@ public class GameManager : MonoBehaviour
 
     private void ToggleWinText()
     {
-
+        Debug.Log("Win");
     }
 
     private void ToggleLoseText()
     {
-
+        Debug.Log("Lose");
     }
 }

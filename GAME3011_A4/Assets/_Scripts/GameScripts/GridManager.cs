@@ -195,12 +195,10 @@ public class GridManager : MonoBehaviour
             // between the two openings, check which one is the 
             if (finishedPipe.PipeType == PipeEnum.START)
             {
-                Debug.Log("START!?");
                 CheckNextPipe(xPos, yPos);
             }
             else if (finishedPipe.PipeType != PipeEnum.START && finishedPipe.GetEntryPoint != openings)
             {
-                Debug.Log("BYPASS!?");
                 pipeArray[xPos, yPos].ExitPoint = openings; // assign the exit point
                 CheckNextPipe(xPos, yPos);
             } 
@@ -235,12 +233,12 @@ public class GridManager : MonoBehaviour
                     }
                     if (!exitFound)
                     {
-                        Debug.Log("GameOver");
+                        GameManager.Instance.InvokeLose();
                     }
                 } 
                 else // out of bounds case
                 {
-                    Debug.Log("GameOver");
+                    GameManager.Instance.InvokeLose();
                 }
                 break;
             case PipeOpenings.DOWN:
@@ -263,12 +261,12 @@ public class GridManager : MonoBehaviour
                     }
                     if (!exitFound)
                     {
-                        Debug.Log("GameOver");
+                        GameManager.Instance.InvokeLose();
                     }
                 }
                 else
                 {
-                    Debug.Log("GameOver");
+                    GameManager.Instance.InvokeLose();
                 }
                 break;
             case PipeOpenings.LEFT:
@@ -291,12 +289,12 @@ public class GridManager : MonoBehaviour
                     }
                     if (!exitFound)
                     {
-                        Debug.Log("GameOver");
+                        GameManager.Instance.InvokeLose();
                     }
                 }
                 else
                 {
-                    Debug.Log("GameOver");
+                    GameManager.Instance.InvokeLose();
                 }
                 break;
             case PipeOpenings.RIGHT:
@@ -319,16 +317,16 @@ public class GridManager : MonoBehaviour
                     }
                     if (!exitFound)
                     {
-                        Debug.Log("GameOver");
+                        GameManager.Instance.InvokeLose();
                     }
                 }
                 else
                 {
-                    Debug.Log("GameOver");
+                    GameManager.Instance.InvokeLose();
                 }
                 break;
             default:
-                Debug.Log("Error Case");
+                GameManager.Instance.InvokeLose();
                 break;
         }
     }

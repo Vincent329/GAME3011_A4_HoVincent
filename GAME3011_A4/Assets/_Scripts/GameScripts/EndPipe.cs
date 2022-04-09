@@ -53,10 +53,10 @@ public class EndPipe : Pipe
 
                 if (GameManager.Instance.requiredPipesRemaining <= 0)
                 {
-                    Debug.Log("Call Win Function");
+                    GameManager.Instance.InvokeWin();
                 } else
                 {
-                    Debug.Log("Call Lose Function");
+                    GameManager.Instance.InvokeLose();
                 }
                 // set win condition here
             }

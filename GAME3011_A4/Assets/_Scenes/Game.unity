@@ -1220,9 +1220,11 @@ MonoBehaviour:
   fillProgressionRate: 0.05
   delayStartTime: 2.5
   gameStarted: 0
+  requiredPipesRemaining: 0
   difficultyEnum: 1
   instructionPanel: {fileID: 896249846}
   gamePanel: {fileID: 978831155}
+  scoreText: {fileID: 895278810}
 --- !u!4 &646871416
 Transform:
   m_ObjectHideFlags: 0
