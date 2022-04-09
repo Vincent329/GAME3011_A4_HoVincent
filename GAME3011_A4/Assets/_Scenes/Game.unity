@@ -1357,7 +1357,7 @@ MonoBehaviour:
   fillProgressionRate: 0.05
   delayStartTime: 2.5
   gameStarted: 0
-  requiredPipesRemaining: 0
+  slowdownPipesRemaining: 0
   difficultyEnum: 1
   instructionPanel: {fileID: 896249846}
   gamePanel: {fileID: 978831155}
@@ -1896,7 +1896,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &896249847
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2427,7 +2427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &978831156
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3156,7 +3156,7 @@ MonoBehaviour:
   endPipe: {fileID: 0}
   requiredColor: {r: 0.51536596, g: 1, b: 0.514151, a: 1}
   requiredPipes: []
-  requiredPipesCount: 2
+  slowPipesCount: 4
   difficultySet: 0
 --- !u!1 &1561054687
 GameObject:

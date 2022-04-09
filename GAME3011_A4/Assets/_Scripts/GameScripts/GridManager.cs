@@ -37,7 +37,7 @@ public class GridManager : MonoBehaviour
     // Must pass through a specific node(s) in order to hack completely
     [SerializeField] private Color requiredColor;
     [SerializeField] private List<Pipe> requiredPipes;
-    [Range(1, 3), SerializeField] private int slowPipesCount;
+    [Range(1, 4), SerializeField] private int slowPipesCount;
     
     // Keep track of difficulty locally
     [SerializeField] private DifficultyEnum difficultySet;
